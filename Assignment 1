@@ -1,0 +1,51 @@
+package com.example.activitylifecycle
+
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.util.Log
+
+class MainActivity : AppCompatActivity() {
+
+    // 1. onCreate
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        Log.d("Lifecycle", "onCreate() called")
+    }
+
+    // 2. onStart
+    override fun onStart() {
+        super.onStart()
+        Log.d("Lifecycle", "onStart() called")
+    }
+
+    // 3. onResume
+    override fun onResume() {
+        super.onResume()
+        Log.d("Lifecycle", "onResume() called")
+    }
+
+    // 4. onPause
+    override fun onPause() {
+        super.onPause()
+        Log.d("Lifecycle", "onPause() called")
+    }
+
+    // 5. onStop
+    override fun onStop() {
+        super.onStop()
+        Log.d("Lifecycle", "onStop() called")
+    }
+
+    // 6. onRestart
+    override fun onRestart() {
+        super.onRestart()
+        Log.d("Lifecycle", "onRestart() called")
+    }
+
+    // 7. onDestroy
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("Lifecycle", "onDestroy() called")
+    }
+}
