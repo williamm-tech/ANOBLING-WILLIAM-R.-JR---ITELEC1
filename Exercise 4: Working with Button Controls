@@ -12,12 +12,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // 1️⃣ Get reference to EditTexts and Add button
+        
         val firstNum = findViewById<EditText>(R.id.firstNum)
         val secNum = findViewById<EditText>(R.id.secondNum)
         val btnAdd = findViewById<Button>(R.id.addBtn)
 
-        // 2️⃣ Handle Add button click
+        
         btnAdd.setOnClickListener {
             val num1Text = firstNum.text.toString()
             val num2Text = secNum.text.toString()
@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
                 val num2 = num2Text.toInt()
                 val sum = num1 + num2
 
-                // 3️⃣ Show the result on the screen
+                
                 Toast.makeText(this, "First Num: $num1, Second Num: $num2, SUM = $sum", Toast.LENGTH_LONG).show()
             }
         }
