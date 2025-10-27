@@ -1,0 +1,110 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#86404C"
+    android:padding="10dp">
+
+
+    <ImageSwitcher
+        android:id="@+id/imageSwitcher"
+        android:layout_width="393dp"
+        android:layout_height="326dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/sak" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageSwitcher"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="54dp"
+        android:layout_marginEnd="134dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnPrev"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:text="←"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/btnNext"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="20dp"
+            android:text="→"
+            android:textSize="24sp" />
+    </LinearLayout>
+</RelativeLayout>
+
+
+
+
+
+
+//mainactivity.kit
+
+
+
+package com.example.imagecontrol
+
+import android.os.Bundle
+import android.widget.Button
+import android.widget.ImageSwitcher
+import android.widget.ImageView
+import android.widget.ViewSwitcher
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var imageSwitcher: ImageSwitcher
+    private val images = arrayOf(R.drawable.sak, R.drawable.spi)
+    private var currentIndex = 0
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        
+        imageSwitcher = findViewById(R.id.imageSwitcher)
+        imageSwitcher.setFactory {
+            val imageView = ImageView(applicationContext)
+            imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+            imageView
+        }
+
+        
+        imageSwitcher.setImageResource(images[currentIndex])
+
+        
+        imageSwitcher.setInAnimation(this, android.R.anim.fade_in)
+        imageSwitcher.setOutAnimation(this, android.R.anim.fade_out)
+
+        
+        val btnPrev: Button = findViewById(R.id.btnPrev)
+        val btnNext: Button = findViewById(R.id.btnNext)
+
+        
+        btnPrev.setOnClickListener {
+            currentIndex--
+            if (currentIndex < 0) {
+                currentIndex = images.size - 1 // Go back to last image
+            }
+            imageSwitcher.setImageResource(images[currentIndex])
+        }
+
+        
+        btnNext.setOnClickListener {
+            currentIndex++
+            if (currentIndex >= images.size) {
+                currentIndex = 0 // Loop back to first image
+            }
+            imageSwitcher.setImageResource(images[currentIndex])
+        }
+    }
+}
+
