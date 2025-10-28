@@ -1,0 +1,377 @@
+//homeActivity.kt
+package com.example.foodorderapp
+
+import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.widget.Button
+
+class HomeActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_home) // your home XML
+
+        val orderButton = findViewById<Button>(R.id.btnStartOrder)
+
+        orderButton.setOnClickListener {
+            val intent = Intent(this, Order::class.java)
+            startActivity(intent)
+        }
+    }
+}
+
+
+//homeactivity.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#92D795"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="24dp">
+
+    
+    <ImageView
+        android:id="@+id/imageViewLogo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/qb"
+        android:layout_marginTop="32dp"
+        android:scaleType="centerCrop"
+        android:background="@drawable/circle_background"
+        android:clipToOutline="true" />
+
+
+   
+    <TextView
+        android:id="@+id/tvWelcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/welcome_text"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:layout_marginTop="24dp" />
+
+    
+    <Button
+        android:id="@+id/btnStartOrder"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="@string/start_order"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>
+
+
+
+
+
+
+//order.kt
+
+package com.example.foodorderapp
+
+import android.content.Intent
+import android.os.Bundle
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+
+class Order : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.order) // your XML file
+
+        val spinner = findViewById<Spinner>(R.id.spinnerFood)
+        val etQuantity = findViewById<EditText>(R.id.etQuantity)
+        val btnPlaceOrder = findViewById<Button>(R.id.btnPlaceOrder) // match XML
+
+        
+        val foods = arrayOf("Burger", "Pizza", "Fries", "Pasta")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, foods)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
+
+        btnPlaceOrder.setOnClickListener {
+            val selectedFood = spinner.selectedItem.toString()
+            val quantity = etQuantity.text.toString().toIntOrNull()
+
+            if (quantity == null || quantity <= 0) {
+                Toast.makeText(this, "Enter a valid quantity", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            
+            val price = when (selectedFood) {
+                "Burger" -> 80.0
+                "Pizza" -> 120.0
+                "Fries" -> 50.0
+                "Pasta" -> 100.0
+                else -> 0.0
+            }
+
+            val total = price * quantity
+
+            
+            val intent = Intent(this, Summary::class.java)
+            intent.putExtra("food", selectedFood)
+            intent.putExtra("quantity", quantity)
+            intent.putExtra("total", total)
+            startActivity(intent)
+        }
+    }
+}
+
+
+
+
+
+
+
+//order.xml
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#93D996"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginBottom="24dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/qb"
+        android:background="@drawable/circle_background"
+        android:clipToOutline="true" />
+
+    
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Place Your Order"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <Spinner
+        android:id="@+id/spinnerFood"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp" />
+
+    <EditText
+        android:id="@+id/etQuantity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:hint="Enter Quantity"
+        android:inputType="number" />
+
+    <Button
+        android:id="@+id/btnPlaceOrder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Place Order" />
+</LinearLayout>
+
+
+
+
+//summary.kt
+
+
+package com.example.foodorderapp   
+
+import android.content.Intent
+import android.os.Bundle
+import android.widget.Button
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+
+class Summary : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.summary)
+
+        val tvFood = findViewById<TextView>(R.id.tvFood)
+        val tvQuantity = findViewById<TextView>(R.id.tvQuantity)
+        val tvTotal = findViewById<TextView>(R.id.tvTotal)
+        val btnBack = findViewById<Button>(R.id.btnBack)
+
+        
+        val food = intent.getStringExtra("food")
+        val quantity = intent.getIntExtra("quantity", 0)
+        val total = intent.getDoubleExtra("total", 0.0)
+
+        tvFood.text = "Food: $food"
+        tvQuantity.text = "Quantity: $quantity"
+        tvTotal.text = "Total: ₱$total"
+
+        btnBack.setOnClickListener {
+            val intent = Intent(this, Order::class.java)
+            startActivity(intent)
+            finish()
+        }
+    }
+}
+
+
+
+
+//summary.xml
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#92D795"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="318dp"
+        android:layout_height="200dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/rounded"
+        android:clipToOutline="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ty" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:text="Order Summary"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvFood"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="Food: "
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tvQuantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="Quantity: "
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tvTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:text="Total: "
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Back to Order" />
+</LinearLayout>
+
+
+
+
+//AndroidManifest.xml
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.FoodOrderApp">
+
+        
+        <activity android:name=".Summary" />
+
+        
+        <activity android:name=".Order" />
+
+        
+        <activity android:name=".HomeActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+    </application>
+
+</manifest>
+
+
+
+//rounded corners image.xml
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="#FFFFFF" /> 
+    <corners android:radius="24dp" /> 
+</shape>
+
+
+//values/string.xml
+
+
+<resources>
+    <string name="app_name">FoodOrderApp</string>
+
+    
+    <string-array name="food_items">
+        <item>Burger</item>
+        <item>Pizza</item>
+        <item>Fries</item>
+    </string-array>
+
+    
+    <string name="welcome_text">Welcome to QuickBites</string>
+    <string name="start_order">Order Now</string>
+    <string name="select_food">Select food:</string>
+    <string name="quantity">Quantity:</string>
+    <string name="place_order">Place Order</string>
+    <string name="order_summary">Order Summary</string>
+</resources>
+
+
+
+//circle image.xml
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="#FFFFFF"/> 
+    <stroke android:width="2dp" android:color="#E0E0E0"/> 
+</shape>
+
