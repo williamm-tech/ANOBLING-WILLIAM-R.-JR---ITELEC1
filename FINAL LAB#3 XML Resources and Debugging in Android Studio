@@ -1,0 +1,79 @@
+MAINACTIVITY.KT
+
+
+package com.example.xmlresourceslab
+
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.util.Log
+import android.widget.Button
+import android.widget.Toast
+
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        val button: Button = findViewById(R.id.btnDebug)
+
+        Log.i("DEBUG_TAG", "MainActivity started successfully")  
+        Log.d("DEBUG_TAG", "Debugging message")                  
+        Log.w("DEBUG_TAG", "Warning message")                    
+        Log.e("DEBUG_TAG", "Error message")                      
+
+        button.setOnClickListener {
+            val message = getWelcomeMessage("User")
+            Log.i("DEBUG_TAG", "Button clicked!")
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun getWelcomeMessage(name: String): String {
+        return "Hello, $name! Welcome to XML Resources Lab!"
+    }
+}
+
+
+
+ACTIVITYMAIN.XML
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tvWelcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/welcome_message"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp" />
+
+    <Button
+        android:id="@+id/btnDebug"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_text" />
+</LinearLayout>
+
+
+
+
+STRING.XML
+
+
+
+<resources>
+    <string name="app_name">XMLResourcesLab</string>
+    <string name="welcome_message">¡Bienvenido al Laboratorio de XML!</string>
+    <string name="button_text">Presióname</string>
+</resources>
+
+
